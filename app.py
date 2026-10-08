@@ -1,29 +1,21 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv
-import os
+from config import Config
 
-# Load environment variables
-load_dotenv()
 
-# Create Flask application
+# Create application
 app = Flask(__name__)
 
-# Configuration
-app.config["SECRET_KEY"] = os.getenv(
-    "SECRET_KEY",
-    "ai-workbench-development-key"
-)
+# Load configuration
+app.config.from_object(Config)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ai_workbench.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# Database initialization
+# Database
 db = SQLAlchemy(app)
 
 
 # ==========================
-# MAIN WEBSITE ROUTES
+# MAIN ROUTES
 # ==========================
 
 @app.route("/")
@@ -51,6 +43,7 @@ def prompt_generator():
 # ==========================
 
 if __name__ == "__main__":
+
     with app.app_context():
         db.create_all()
 
